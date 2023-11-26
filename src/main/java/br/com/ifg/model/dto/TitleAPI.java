@@ -226,4 +226,16 @@ public class TitleAPI {
     public void setResponse(String response) {
         this.response = response;
     }
+
+    @Override
+    public String toString() {
+        return "TitleAPI{" +
+                "title='" + title + '\'' +
+                ", year='" + year + '\'' +
+                ", genre='" + genre + '\'' +
+                ", director='" + director + '\'' +
+                ", writer='" + writer + '\'' +
+                ", country='" + country + '\'' +
+                '}';
+    }
 }

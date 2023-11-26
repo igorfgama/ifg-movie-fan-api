@@ -1,10 +1,7 @@
 package br.com.ifg.service;
 
 import br.com.ifg.enums.TypeEnum;
-import br.com.ifg.model.dto.MovieListResponse;
-import br.com.ifg.model.dto.SearchAPI;
-import br.com.ifg.model.dto.TitleAPI;
-import br.com.ifg.model.dto.UserMovieDTO;
+import br.com.ifg.model.dto.*;
 import br.com.ifg.model.entity.Movie;
 import br.com.ifg.model.entity.User;
 import br.com.ifg.model.entity.UserMovie;
@@ -20,6 +17,7 @@ import jakarta.ws.rs.NotAuthorizedException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +44,32 @@ public class MovieService {
 
     public SearchAPI search(String title) {
         return client.getMovieBySearch(apiKey, title);
+    }
+
+    public List<SearchResponse> searchResponse(String title) {
+        SearchAPI searchAPI = client.getMovieBySearch(apiKey, title);
+        List<SearchResponse> searchResponse = new ArrayList<>();
+
+        searchAPI.getMovies().forEach(m -> {
+            SearchResponse search = new SearchResponse();
+            TitleAPI titleAPI = client.getMovieById(apiKey, m.getImdbId());
+            System.out.println("TITLE: " + titleAPI);
+
+            search.setActors(titleAPI.getActors());
+            search.setCountry(titleAPI.getCountry());
+            search.setDirector(titleAPI.getDirector());
+            search.setGenre(titleAPI.getGenre());
+            search.setPoster(m.getPoster());
+            search.setTitle(m.getTitle());
+            search.setYear(m.getYear());
+            search.setImdbId(m.getImdbId());
+
+            System.out.println("SEARCH: " + search);
+
+            searchResponse.add(search);
+        });
+
+        return  searchResponse;
     }
 
     public SearchAPI searchYear(String title, String year) {

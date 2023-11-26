@@ -125,4 +125,14 @@ public class MovieResource {
         String email = jwt.getName();
         return Response.ok(movieService.listAllMovies(email)).build();
     }
+
+    @Operation(summary = "Método para retonar lista de filmes")
+    @Tag(name = "movie list")
+    @GET
+    @Path("/list/{title}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response allMovies(@PathParam("title") String title) {
+        return Response.ok(movieService.searchResponse(title)).build();
+    }
 }
